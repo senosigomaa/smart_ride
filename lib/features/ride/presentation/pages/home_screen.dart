@@ -18,11 +18,14 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: Stack(
         children: [
+          // 1. استخدام رابط خريطة مستقر لا يسبب خطأ 403
           Container(
             decoration: const BoxDecoration(
+              color: AppTheme.lightBgColor,
               image: DecorationImage(
-                image: NetworkImage('https://snazzy-maps-cdn.azureedge.net/assets/74-become-a-dinosaur.png?v=20170626082939'),
+                image: NetworkImage('https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=800&auto=format&fit=crop'),
                 fit: BoxFit.cover,
+                opacity: 0.5,
               ),
             ),
           ),
@@ -153,20 +156,27 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // 2. حل جذري لمشكلة الأنيميشن والشاشة الحمراء
   Widget _buildServicePill(int index, IconData icon, String title) {
     bool isSelected = _selectedService == index;
     return GestureDetector(
       onTap: () => setState(() => _selectedService = index),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeOutBack,
+        duration: const Duration(milliseconds: 250), // سرعة أفضل للأنيميشن
         margin: const EdgeInsets.only(left: 12),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         decoration: BoxDecoration(
           color: isSelected ? AppTheme.primaryColor : Colors.white,
           borderRadius: BorderRadius.circular(25),
           border: Border.all(color: isSelected ? AppTheme.primaryColor : Colors.grey.withOpacity(0.2)),
-          boxShadow: isSelected ? [BoxShadow(color: AppTheme.primaryColor.withOpacity(0.3), blurRadius: 10, offset: const Offset(0, 4))] : [],
+          boxShadow: [
+            BoxShadow(
+              // نغير لون الظل لشفاف بدل ما نغير الـ blurRadius للصفر عشان نمنع الخطأ السالب
+              color: isSelected ? AppTheme.primaryColor.withOpacity(0.3) : Colors.transparent,
+              blurRadius: 10.0, // القيمة ثابتة عشان فلاتر ميتلخبطش
+              offset: const Offset(0, 4), // القيمة ثابتة
+            )
+          ],
         ),
         child: Row(
           children: [

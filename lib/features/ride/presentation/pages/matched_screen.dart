@@ -10,11 +10,16 @@ class MatchedScreen extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
+          // استخدام رابط الخريطة الجديد والمستقر لتجنب خطأ 403
           Container(
             decoration: const BoxDecoration(
+              color: AppTheme.lightBgColor,
               image: DecorationImage(
-                image: NetworkImage('https://snazzy-maps-cdn.azureedge.net/assets/74-become-a-dinosaur.png?v=20170626082939'),
+                image: NetworkImage(
+                  'https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=800&auto=format&fit=crop',
+                ),
                 fit: BoxFit.cover,
+                opacity: 0.5, // لضبط إضاءة الخريطة وجعلها احترافية
               ),
             ),
           ),
@@ -22,8 +27,15 @@ class MatchedScreen extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(20),
               child: Container(
-                decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle, boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10)]),
-                child: IconButton(icon: const Icon(Icons.close_rounded, color: Colors.black), onPressed: () => Navigator.pop(context)),
+                decoration: BoxDecoration(
+                  color: Colors.white, 
+                  shape: BoxShape.circle, 
+                  boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10)]
+                ),
+                child: IconButton(
+                  icon: const Icon(Icons.close_rounded, color: Colors.black), 
+                  onPressed: () => Navigator.pop(context),
+                ),
               ),
             ),
           ),
@@ -59,7 +71,11 @@ class MatchedScreen extends StatelessWidget {
                         const SizedBox(height: 20),
                         Container(
                           padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(color: const Color(0xFFF4F6F9), borderRadius: BorderRadius.circular(20), border: Border.all(color: Colors.grey.withOpacity(0.1))),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF4F6F9), 
+                            borderRadius: BorderRadius.circular(20), 
+                            border: Border.all(color: Colors.grey.withOpacity(0.1))
+                          ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -72,7 +88,11 @@ class MatchedScreen extends StatelessWidget {
                               ),
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppTheme.primaryColor.withOpacity(0.3))),
+                                decoration: BoxDecoration(
+                                  color: Colors.white, 
+                                  borderRadius: BorderRadius.circular(12), 
+                                  border: Border.all(color: AppTheme.primaryColor.withOpacity(0.3))
+                                ),
                                 child: const Text('أ ب ج 123', style: TextStyle(color: AppTheme.primaryColor, fontWeight: FontWeight.w900, fontSize: 16)),
                               ),
                             ],
@@ -86,7 +106,11 @@ class MatchedScreen extends StatelessWidget {
                                 onPressed: () {
                                   Navigator.push(context, MaterialPageRoute(builder: (_) => const ChatScreen()));
                                 },
-                                style: TextButton.styleFrom(backgroundColor: AppTheme.primaryColor.withOpacity(0.1), padding: const EdgeInsets.symmetric(vertical: 16), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
+                                style: TextButton.styleFrom(
+                                  backgroundColor: AppTheme.primaryColor.withOpacity(0.1), 
+                                  padding: const EdgeInsets.symmetric(vertical: 16), 
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))
+                                ),
                                 icon: const Icon(Icons.chat_bubble_rounded, color: AppTheme.primaryColor),
                                 label: const Text('محادثة', style: TextStyle(color: AppTheme.primaryColor, fontWeight: FontWeight.bold)),
                               ),
@@ -95,7 +119,12 @@ class MatchedScreen extends StatelessWidget {
                             Expanded(
                               child: ElevatedButton.icon(
                                 onPressed: () {},
-                                style: ElevatedButton.styleFrom(backgroundColor: AppTheme.primaryColor, padding: const EdgeInsets.symmetric(vertical: 16), elevation: 0, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppTheme.primaryColor, 
+                                  padding: const EdgeInsets.symmetric(vertical: 16), 
+                                  elevation: 0, 
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))
+                                ),
                                 icon: const Icon(Icons.phone_rounded, color: Colors.white),
                                 label: const Text('اتصال', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                               ),
