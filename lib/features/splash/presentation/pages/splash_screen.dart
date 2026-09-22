@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:smart_ride/core/theme/app_theme.dart';
+import 'package:smart_ride/features/auth/presentation/pages/login_screen.dart';
 import '../../../ride/presentation/pages/home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -15,8 +16,9 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(const Duration(seconds: 2), () {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomeScreen()));
-    });
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const LoginScreen()));
+});
+
   }
 
   @override

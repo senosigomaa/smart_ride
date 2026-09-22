@@ -24,7 +24,7 @@ class ChatScreen extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: const [
-                Text('كريم طارق', style: TextStyle(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.bold)),
+                Text('سنوسي', style: TextStyle(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.bold)),
                 Text('متصل الآن', style: TextStyle(color: AppTheme.successColor, fontSize: 12, fontWeight: FontWeight.bold)),
               ],
             ),

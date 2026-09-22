@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:smart_ride/core/theme/app_theme.dart';
+import 'package:smart_ride/features/chat/presentation/pages/call_screen.dart';
 import '../../../chat/presentation/pages/chat_screen.dart';
+import 'trip_screen.dart'; // ضفنا الـ import ده عشان شاشة الرحلة
 
 class MatchedScreen extends StatelessWidget {
   const MatchedScreen({super.key});
@@ -10,7 +12,7 @@ class MatchedScreen extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          // استخدام رابط الخريطة الجديد والمستقر لتجنب خطأ 403
+          // الخريطة المستقرة
           Container(
             decoration: const BoxDecoration(
               color: AppTheme.lightBgColor,
@@ -19,7 +21,7 @@ class MatchedScreen extends StatelessWidget {
                   'https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=800&auto=format&fit=crop',
                 ),
                 fit: BoxFit.cover,
-                opacity: 0.5, // لضبط إضاءة الخريطة وجعلها احترافية
+                opacity: 0.5,
               ),
             ),
           ),
@@ -58,7 +60,7 @@ class MatchedScreen extends StatelessWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Text('كريم طارق', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900)),
+                        const Text('سنوسي', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900)),
                         const SizedBox(height: 5),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -99,6 +101,8 @@ class MatchedScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 25),
+                        
+                        // أزرار التواصل (محادثة - اتصال)
                         Row(
                           children: [
                             Expanded(
@@ -118,7 +122,9 @@ class MatchedScreen extends StatelessWidget {
                             const SizedBox(width: 16),
                             Expanded(
                               child: ElevatedButton.icon(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(context, MaterialPageRoute(builder: (_) => const CallScreen()));
+                                },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: AppTheme.primaryColor, 
                                   padding: const EdgeInsets.symmetric(vertical: 16), 
@@ -131,6 +137,35 @@ class MatchedScreen extends StatelessWidget {
                             ),
                           ],
                         ),
+                        
+                        const SizedBox(height: 16),
+                        
+                        // الزر الجديد: بدء الرحلة
+                        Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            gradient: const LinearGradient(colors: [Color(0xFF8E2DE2), AppTheme.primaryColor]),
+                            boxShadow: [BoxShadow(color: AppTheme.primaryColor.withOpacity(0.4), blurRadius: 15, offset: const Offset(0, 8))],
+                          ),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(20),
+                              onTap: () {
+                                // الانتقال لشاشة الرحلة النشطة
+                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const TripScreen()));
+                              },
+                              child: const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 16),
+                                child: Center(
+                                  child: Text('بدء الرحلة (أنا ركبت)', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        
                       ],
                     ),
                   ),
