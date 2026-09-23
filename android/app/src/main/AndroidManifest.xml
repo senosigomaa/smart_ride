@@ -1,8 +1,22 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <!-- الصلاحيات -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    
     <application
         android:label="smart_ride"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        
+         <!-- مفتاح Google Maps -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyATGrtEbwDVRac_56kelsihef62SW3EAYw" />
+
+        
+        
         <activity
             android:name=".MainActivity"
             android:exported="true"

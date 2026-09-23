@@ -66,5 +66,11 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+
+	<!-- صلاحيات الموقع الخاصة بـ Geolocator و Google Maps -->
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>تطبيق Smart Ride يحتاج للوصول إلى موقعك لعرض الكباتن المتاحين حولك.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>تطبيق Smart Ride يحتاج للوصول إلى موقعك لتتبع مسار رحلتك بدقة.</string>
 </dict>
 </plist>

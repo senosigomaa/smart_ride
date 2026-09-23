@@ -1,4 +1,7 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:smart_ride/core/theme/app_theme.dart';
 import 'searching_screen.dart';
 import '../../../wallet/presentation/pages/transaction_screen.dart';
@@ -12,23 +15,66 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedService = 3; 
+  
+  // 1. إعدادات الخريطة
+  final Completer<GoogleMapController> _controller = Completer();
+  // موقع افتراضي (الشيخ زايد مثلاً) لحد ما الـ GPS يشتغل
+  static const CameraPosition _initialPosition = CameraPosition(
+    target: LatLng(30.0197, 31.0028), 
+    zoom: 14.4746,
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    _determinePosition(); // تشغيل الـ GPS أول ما الشاشة تفتح
+  }
+
+  // 2. دالة جلب الموقع الحالي (GPS)
+  Future<void> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) return;
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) return;
+    }
+    
+    if (permission == LocationPermission.deniedForever) return;
+
+    Position position = await Geolocator.getCurrentPosition();
+    
+    // تحريك كاميرا الخريطة لموقع المستخدم فوراً
+    final GoogleMapController mapController = await _controller.future;
+    mapController.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(
+        target: LatLng(position.latitude, position.longitude),
+        zoom: 16.0,
+      )
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-          // 1. استخدام رابط خريطة مستقر لا يسبب خطأ 403
-          Container(
-            decoration: const BoxDecoration(
-              color: AppTheme.lightBgColor,
-              image: DecorationImage(
-                image: NetworkImage('https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=800&auto=format&fit=crop'),
-                fit: BoxFit.cover,
-                opacity: 0.5,
-              ),
-            ),
+          // 3. الخريطة الحقيقية
+          GoogleMap(
+            mapType: MapType.normal,
+            initialCameraPosition: _initialPosition,
+            myLocationEnabled: true, // إظهار النقطة الزرقاء (موقعك)
+            myLocationButtonEnabled: false, // هنخفي الزرار الافتراضي عشان الديزاين بتاعنا
+            zoomControlsEnabled: false, // إخفاء أزرار الزوم +/-
+            onMapCreated: (GoogleMapController controller) {
+              _controller.complete(controller);
+            },
           ),
+          
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(20),
@@ -37,9 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   _buildFloatingIcon(Icons.sort_rounded),
                   const Spacer(),
                   GestureDetector(
-                    onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (_) => const TransactionScreen()));
-                    },
+                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const TransactionScreen())),
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                       decoration: BoxDecoration(
@@ -62,6 +106,21 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
+          
+          // 4. زر التمركز على موقعي (مخصص)
+          Positioned(
+            bottom: MediaQuery.of(context).size.height * 0.42,
+            right: 20,
+            child: GestureDetector(
+              onTap: _determinePosition,
+              child: Container(
+                width: 50, height: 50,
+                decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle, boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10)]),
+                child: const Icon(Icons.my_location_rounded, color: AppTheme.primaryColor),
+              ),
+            ),
+          ),
+
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -82,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     child: Column(
                       children: [
-                        _buildInputField(Icons.my_location_rounded, AppTheme.primaryColor, 'الشيخ زايد، المحور المركزي'),
+                        _buildInputField(Icons.my_location_rounded, AppTheme.primaryColor, 'موقعك الحالي'),
                         Divider(color: Colors.grey.withOpacity(0.2), height: 1, indent: 50, endIndent: 20),
                         _buildInputField(Icons.location_on_rounded, AppTheme.secondaryColor, 'إلى أين تريد الذهاب؟', isHint: true),
                       ],
@@ -135,10 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildFloatingIcon(IconData icon) {
     return Container(
       width: 48, height: 48,
-      decoration: BoxDecoration(
-        color: Colors.white, shape: BoxShape.circle,
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.08), blurRadius: 12, offset: const Offset(0, 4))],
-      ),
+      decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle, boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.08), blurRadius: 12, offset: const Offset(0, 4))]),
       child: Icon(icon, color: Colors.black87),
     );
   }
@@ -156,13 +212,12 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // 2. حل جذري لمشكلة الأنيميشن والشاشة الحمراء
   Widget _buildServicePill(int index, IconData icon, String title) {
     bool isSelected = _selectedService == index;
     return GestureDetector(
       onTap: () => setState(() => _selectedService = index),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 250), // سرعة أفضل للأنيميشن
+        duration: const Duration(milliseconds: 250),
         margin: const EdgeInsets.only(left: 12),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         decoration: BoxDecoration(
@@ -171,10 +226,9 @@ class _HomeScreenState extends State<HomeScreen> {
           border: Border.all(color: isSelected ? AppTheme.primaryColor : Colors.grey.withOpacity(0.2)),
           boxShadow: [
             BoxShadow(
-              // نغير لون الظل لشفاف بدل ما نغير الـ blurRadius للصفر عشان نمنع الخطأ السالب
               color: isSelected ? AppTheme.primaryColor.withOpacity(0.3) : Colors.transparent,
-              blurRadius: 10.0, // القيمة ثابتة عشان فلاتر ميتلخبطش
-              offset: const Offset(0, 4), // القيمة ثابتة
+              blurRadius: 10.0,
+              offset: const Offset(0, 4),
             )
           ],
         ),
