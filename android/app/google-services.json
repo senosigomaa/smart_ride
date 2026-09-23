@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "460181292669",
+    "project_id": "com-example-service-locator",
+    "storage_bucket": "com-example-service-locator.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:460181292669:android:d872d8c297acbe877d5314",
+        "android_client_info": {
+          "package_name": "com.smartride.smart_ride"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgc_7_z1PoNuFhyu0mnX3_pMTH942njL4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
